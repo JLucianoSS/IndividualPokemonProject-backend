@@ -1,12 +1,22 @@
 const { Router } = require('express');
-// Importar todos los routers;
-// Ejemplo: const authRouter = require('./auth.js');
-
+/* Importacion de Routers */
+const { getPokemons, getPokemon, createBulkTypes ,postPokemon} = require('../controllers');
 
 const router = Router();
 
-// Configurar los routers
-// Ejemplo: router.use('/auth', authRouter);
+/* Configuración de routers*/
+
+router.get("/pokemons",getPokemons);
+router.get("/pokemon/:idPokemon",getPokemon);
+// router.get("/pokemons/") query name?=nombre
+router.post("/pokemon",postPokemon)
+// router.get("/types")
+
+/* 
+    /types/bulk es solo para llenar la tabla types y generar
+    los UUID
+*/
+router.post("/types/bulk",createBulkTypes);
 
 
 module.exports = router;
