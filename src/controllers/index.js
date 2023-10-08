@@ -1,13 +1,13 @@
 
 const getPokemons = require("./getPokemons");
-const getPokemon = require("./getPokemon");
+const getPokemonById = require("./getPokemonById");
 const createBulkTypes = require("./createBulkTypes");
 const postPokemon = require("./postPokemon");
 
 
 module.exports = {
     getPokemons,
-    getPokemon,
+    getPokemonById,
     createBulkTypes,
     postPokemon
 }

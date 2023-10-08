@@ -4,10 +4,11 @@
   */
 
 const axios = require('axios');
-const URL = "https://pokeapi.co/api/v2/pokemon/";
 const getPropsPokemon = require("../utils/getPropsPokemon");
 
-const getPokemon = async (req,res) => {
+const URL = "https://pokeapi.co/api/v2/pokemon/";
+
+const getPokemonById = async (req,res) => {
     try {
         const { idPokemon } = req.params;
         const response = await axios.get(URL + idPokemon);
@@ -19,5 +20,4 @@ const getPokemon = async (req,res) => {
         res.status(500).json({message:error.message})
     }
 }
-
-module.exports = getPokemon;
+module.exports = getPokemonById;
