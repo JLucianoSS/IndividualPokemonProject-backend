@@ -18,6 +18,4 @@ const createBulkTypes = async (req, res) =>  {
         res.status(500).json({message: error.message})
     }
 }
-
-
 module.exports = createBulkTypes;
