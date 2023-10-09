@@ -6,6 +6,7 @@
 const axios = require('axios');
 const getPropsPokemon = require("../utils/getPropsPokemon");
 const isUUID =  require("../utils/isUUID");
+const idExist =  require("../utils/idExist");
 const { Pokemons, Types } = require("../db/connection")
 
 const URL = "https://pokeapi.co/api/v2/pokemon/";
@@ -13,7 +14,7 @@ const URL = "https://pokeapi.co/api/v2/pokemon/";
 const getPokemonById = async (req,res) => {
     try {
         const { idPokemon } = req.params;
-        /* Obtiene los datos de la BD */
+        /* Busca  los datos del pokemon en la BD */
         if(isUUID(idPokemon)){
             const dbPokemon = await Pokemons.findByPk(idPokemon,{
                 include:{
@@ -26,10 +27,14 @@ const getPokemonById = async (req,res) => {
             });
             return res.json( dbPokemon );
         }
-        /* Obtiene los datos de la Api */
-        const {data} = await axios.get(URL + idPokemon);
-        const pokemon = getPropsPokemon(data)
-        return res.json( pokemon );
+        /* Busca los datos del pokemon en la Api */
+        if ( idExist(idPokemon)){
+            const {data} = await axios.get(URL + idPokemon);
+            const pokemon = getPropsPokemon(data)
+            return res.json( pokemon );
+        }
+        /*Sino encuentra ningun pokemon con ese id */
+        return res.status(404).json( {message:'No hay ningún pokemon con ese id'} );
     } catch (error) {
         res.status(500).json({message:error.message})
     }

@@ -7,7 +7,6 @@ const URL = "https://pokeapi.co/api/v2/type";
 
 const getTypes = async (req,res) => {
     try {
-
         /*Comprueba si la bd ya tiene los types antes de ingresarlos */
         const count = await Types.count();;
         if(count === 0){

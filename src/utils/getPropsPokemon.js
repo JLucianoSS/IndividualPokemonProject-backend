@@ -3,12 +3,14 @@ const getPropsPokemon = (pokemon) => {
   const {
     id,
     forms: [{ name }],
-    sprites: {
+    sprites: {                        //modificar sprites si desea mostrar más img del pokemon
       other: {
         dream_world: { front_default },
       },
     },
     stats,
+    height,
+	  weight,
     types,
   } = pokemon;
 
@@ -30,6 +32,8 @@ const getPropsPokemon = (pokemon) => {
     attack,
     defense,
     speed,
+    height,
+    weight,
     types: pokemonTypes,
   };
 };

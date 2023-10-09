@@ -17,7 +17,7 @@ const getPokemonByQuery = async (req,res) => {
         /*Pasa de CamelCase a snake-case */
         const newName = camelToSnake(name)
 
-        /* Obtiene los datos de la BD */
+        /* Busca los datos del pokemon en la BD */
         const dbPokemon = await Pokemons.findOne({
             where: {name:newName},
             include:{
@@ -28,12 +28,22 @@ const getPokemonByQuery = async (req,res) => {
                 }
             }
         });
-        if(dbPokemon) return res.json( dbPokemon );
 
-        /* Obtiene los datos de la Api */
-        const {data} = await axios.get(URL + newName);
-        const pokemon = getPropsPokemon(data)
-        return res.json( pokemon );
+        /* Guarda en foundPokemon el resultado de la consulta a la BD.
+           Sino encontró pokemon en la BD consulta a la api  */
+        let foundPokemon = dbPokemon;
+        if (!dbPokemon) {
+            try {
+                /*Consulta a la api */
+                const { data } = await axios.get(URL + newName);
+                const apiPokemon = getPropsPokemon(data);
+                if (apiPokemon) foundPokemon = apiPokemon;
+            } catch (apiError) { }
+        }
+
+        /* Verifica si se encontró el Pokémon y responde en consecuencia */
+        if (foundPokemon) return res.json(foundPokemon);
+        else return res.status(404).json({ message: "No hay ningún Pokémon con ese nombre" });
     } catch (error) {
         res.status(500).json({message:error.message})
     }
