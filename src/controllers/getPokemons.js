@@ -5,7 +5,7 @@
 
 const axios = require('axios');
 const getPropsPokemon = require("../utils/getPropsPokemon");
-const { Pokemons, Types } = require("../db/connection")
+const { Pokemons, Types } = require("../db/connection");
 
 const LIMIT = 10;
 const URL = "https://pokeapi.co/api/v2/pokemon/";

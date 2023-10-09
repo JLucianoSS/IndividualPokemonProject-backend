@@ -9,7 +9,7 @@ const { conn } = require('./db/connection');
   Ojo: Se borrarán todos los datos y habrá que llenar de 
   nuevo las tablas.
 */
-conn.sync({ alter: false }).then(() => {
+conn.sync({ force: true }).then(() => {
   console.log('Database Connected');
   server.listen(PORT, () => {
     console.log('%s listening at ' + PORT); // eslint-disable-line no-console
