@@ -27,7 +27,7 @@ const getPokemonById = async (req,res) => {
             });
             return res.json( dbPokemon );
         }
-        /* Busca los datos del pokemon en la Api */
+        /* Busca y comprueba si el pokemon existe en la Api */
         if ( idExist(idPokemon)){
             const {data} = await axios.get(URL + idPokemon);
             const pokemon = getPropsPokemon(data)
