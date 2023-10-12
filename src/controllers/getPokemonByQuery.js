@@ -23,6 +23,7 @@ const getPokemonByQuery = async (req,res) => {
             include:{
                 model: Types,
                 attributes: ["name"],
+                as:'types',
                 through:{
                     attributes:[]
                 }
