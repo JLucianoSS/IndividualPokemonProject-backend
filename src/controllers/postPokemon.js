@@ -9,6 +9,7 @@
     const postPokemon = async (req, res) =>  {
         try {
            const {name, images,hp,attack,defense,speed,height,weight,types}  = req.body;
+           
            validate({name, images,hp,attack,defense,speed,height,weight,types});
              
            /*Pasa de CamelCase a snake-case */
@@ -19,11 +20,12 @@
                 where:{name:newName},
                 defaults:{images,hp,attack,defense,speed,height,weight}
             });
-            newPokemon.addTypes(types)
-            
-            return (isCreated) 
-            ? res.json({newPokemon})
-            : res.json({message:"Ya existe este pokemon"})
+  
+            if(isCreated){
+                newPokemon.addTypes(types)
+                return res.json({newPokemon})
+            }
+            return res.status(409).json({message:"Ya existe este pokemon"})
             
         } catch (error) {
             res.status(500).json({message: error.message})
