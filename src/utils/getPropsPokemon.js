@@ -1,18 +1,17 @@
 const getPropsPokemon = (pokemon) => {
-  /* Obteniendo las propiedades id, name e img */
+  /* Obteniendo las propiedades id, name */
   const {
     id,
     forms: [{ name }],
-    sprites: {                        //modificar sprites si desea mostrar más img del pokemon
-      other: {
-        dream_world: { front_default },
-      },
-    },
+    sprites,
     stats,
     height,
 	  weight,
     types,
   } = pokemon;
+
+  /* Obteniendo la img o sprite del pokemon */
+  const imgDefault = sprites.other["official-artwork"].front_default;
 
   /* Obteniendo las stats -> hp, attack, defense y speed */
   const hp = stats.find((p) => p.stat.name === "hp").base_stat;
@@ -27,7 +26,7 @@ const getPropsPokemon = (pokemon) => {
   return {
     id,
     name,
-    images: front_default,
+    images: imgDefault,
     hp,
     attack,
     defense,

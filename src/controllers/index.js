@@ -5,7 +5,7 @@ const getPokemonByQuery = require("./getPokemonByQuery");
 const postPokemon = require("./postPokemon");
 const getTypes = require("./getTypes");
 
-const createBulkTypes = require("./createBulkTypes");
+
 
 module.exports = {
     getPokemons,
@@ -13,5 +13,4 @@ module.exports = {
     getPokemonByQuery,
     postPokemon,
     getTypes,
-    createBulkTypes,
 }

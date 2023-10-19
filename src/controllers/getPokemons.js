@@ -7,8 +7,8 @@ const axios = require('axios');
 const getPropsPokemon = require("../utils/getPropsPokemon");
 const { Pokemons, Types } = require("../db/connection");
 
-const LIMIT = 10;
-const URL = "https://pokeapi.co/api/v2/pokemon/";
+const LIMIT = 100;
+const URL = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${LIMIT}`;
 
 const getPokemons = async (req, res) =>  {
     try {
@@ -27,10 +27,14 @@ const getPokemons = async (req, res) =>  {
         if(dbPokemons) pokemons = [...dbPokemons];
 
         /* Obtiene los datos de la Api */
-        for (let i=1;i<=LIMIT;i++){
-            const {data} = await axios.get( URL + i);
-            pokemons.push(getPropsPokemon(data));
-        }
+        const { data } = await axios.get( URL );
+        const detailPromises = data.results.map(async(pokemon) => {
+            const { data } = await axios.get(pokemon.url)
+            return getPropsPokemon(data);
+        });
+        const apiPokemons = await Promise.all(detailPromises);
+        pokemons = [...dbPokemons,...apiPokemons ]
+
         return res.json(pokemons)
         
     } catch (error) {
