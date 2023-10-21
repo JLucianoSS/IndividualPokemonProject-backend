@@ -13,6 +13,9 @@ const URL = "https://pokeapi.co/api/v2/pokemon/";
 const getPokemonByQuery = async (req,res) => {
     try {  
         const {name} = req.query;
+    
+        /**Compruba si lo que viene por name no es un numero */
+        if(!isNaN(name)) return res.status(400).json({ message: "Parámetro incorrecto" })
         
         /*Pasa de CamelCase a snake-case */
         const newName = camelToSnake(name)
