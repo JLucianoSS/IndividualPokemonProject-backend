@@ -8,7 +8,8 @@ const getPropsPokemon = require("../utils/getPropsPokemon");
 const camelToSnake = require("../utils/camelToSnake");
 const { Pokemons, Types } = require("../db/connection")
 
-const URL = "https://pokeapi.co/api/v2/pokemon/";
+const LIMIT = 400;
+const URL = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${LIMIT}`;
 
 const getPokemonByQuery = async (req,res) => {
     try {  
@@ -20,9 +21,9 @@ const getPokemonByQuery = async (req,res) => {
         /*Pasa de CamelCase a snake-case */
         const newName = camelToSnake(name)
 
-        /* Busca los datos del pokemon en la BD */
-        const dbPokemon = await Pokemons.findOne({
-            where: {name:newName},
+        let pokemons = [];
+        /* Obtiene los pokemons de la BD */
+        const dbPokemons = await Pokemons.findAll({
             include:{
                 model: Types,
                 attributes: ["name"],
@@ -32,21 +33,23 @@ const getPokemonByQuery = async (req,res) => {
                 }
             }
         });
+        if(dbPokemons) pokemons = [...dbPokemons];
 
-        /* Guarda en foundPokemon el resultado de la consulta a la BD.
-           Sino encontró pokemon en la BD consulta a la api  */
-        let foundPokemon = dbPokemon;
-        if (!dbPokemon) {
-            try {
-                /*Consulta a la api */
-                const { data } = await axios.get(URL + newName);
-                const apiPokemon = getPropsPokemon(data);
-                if (apiPokemon) foundPokemon = apiPokemon;
-            } catch (apiError) { }
-        }
+        /* Obtiene los pokemons de la Api */
+        const { data } = await axios.get( URL );
+        const detailPromises = data.results.map(async(pokemon) => {
+            const { data } = await axios.get(pokemon.url)
+            return getPropsPokemon(data);
+        });
+        const apiPokemons = await Promise.all(detailPromises);
+        pokemons = [...dbPokemons,...apiPokemons ]
+
+        /** Una ves obtenidos buscará todas las ocurrencias con el query ?name */
+        const filterPokemons = pokemons.filter( pokemon => pokemon.name.toLocaleLowerCase().includes( newName.trim() )  )
+        
 
         /* Verifica si se encontró el Pokémon y responde en consecuencia */
-        if (foundPokemon) return res.json(foundPokemon);
+        if (filterPokemons.length !== 0) return res.json(filterPokemons);
         else return res.status(404).json({ message: "No hay ningún Pokémon con ese nombre" });
     } catch (error) {
         res.status(500).json({message:error.message})
