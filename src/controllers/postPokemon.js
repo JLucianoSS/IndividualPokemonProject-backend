@@ -10,6 +10,9 @@
         try {
            const {name, images,hp,attack,defense,speed,height,weight,types}  = req.body;
            
+           console.log(req.body);
+           
+           
            validate({name, images,hp,attack,defense,speed,height,weight,types});
              
            /*Pasa de CamelCase a snake-case */

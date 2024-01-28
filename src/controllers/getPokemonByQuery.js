@@ -49,8 +49,8 @@ const getPokemonByQuery = async (req,res) => {
         
 
         /* Verifica si se encontró el Pokémon y responde en consecuencia */
-        if (filterPokemons.length !== 0) return res.json(filterPokemons);
-        else return res.status(404).json({ message: "No hay ningún Pokémon con ese nombre" });
+        return res.json(filterPokemons);
+
     } catch (error) {
         res.status(500).json({message:error.message})
     }
