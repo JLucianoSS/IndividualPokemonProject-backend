@@ -25,7 +25,7 @@
             });
   
             if(isCreated){
-                newPokemon.addTypes(types)
+                newPokemon.addTypes(types);
                 return res.json({newPokemon})
             }
             return res.status(409).json({message:"Ya existe este pokemon"})
